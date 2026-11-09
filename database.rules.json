@@ -1,0 +1,16 @@
+{
+  "rules": {
+    "groups": {
+      "$gid": {
+        ".read": "$gid.length >= 20",
+        "pin": {
+          ".write": "!data.exists() && $gid.length >= 20",
+          ".validate": "newData.isString() && newData.val().length >= 4"
+        },
+        "nights": {
+          ".write": "$gid.length >= 20 && root.child('groups').child($gid).child('pin').exists()"
+        }
+      }
+    }
+  }
+}

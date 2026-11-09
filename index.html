@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Poker Tracker</title>
+  <style>
+    :root { color-scheme: light dark; --bg: #0f3d2e; --card: #14523d; --fg: #f4f4f0; --muted: #b8cfc4; --accent: #f2c14e; --bad: #ff6b6b; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font: 16px/1.4 system-ui, sans-serif; background: var(--bg); color: var(--fg); }
+    main { max-width: 560px; margin: 0 auto; padding: 16px; }
+    h1 { font-size: 1.5rem; margin: 8px 0 16px; }
+    .card { background: var(--card); border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+    label { display: block; margin-bottom: 6px; color: var(--muted); }
+    input, button { font: inherit; width: 100%; padding: 12px; border-radius: 8px; border: 0; margin-bottom: 10px; }
+    button { background: var(--accent); color: #222; font-weight: 600; cursor: pointer; }
+    .link { word-break: break-all; background: #0b2c21; padding: 10px; border-radius: 8px; }
+    .error { color: var(--bad); min-height: 1.4em; }
+    [hidden] { display: none !important; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>♠ Poker Tracker</h1>
+
+    <section id="create" class="card" hidden>
+      <form id="create-form">
+        <label for="new-pin">PIN del grupo (mínimo 4 caracteres)</label>
+        <input id="new-pin" inputmode="numeric" minlength="4" required autocomplete="off">
+        <button>Crear grupo</button>
+      </form>
+    </section>
+
+    <section id="login" class="card" hidden>
+      <form id="login-form">
+        <label for="pin">PIN del grupo</label>
+        <input id="pin" inputmode="numeric" required autocomplete="off">
+        <button>Entrar</button>
+      </form>
+    </section>
+
+    <section id="group" class="card" hidden>
+      <label>Link para compartir con tus amigos:</label>
+      <p class="link" id="share"></p>
+      <button id="copy" type="button">Copiar link</button>
+    </section>
+
+    <p class="error" id="error" role="alert"></p>
+  </main>
+  <script type="module" src="app.js"></script>
+</body>
+</html>

@@ -17,6 +17,15 @@
     .link { word-break: break-all; background: #0b2c21; padding: 10px; border-radius: 8px; }
     .error { color: var(--bad); min-height: 1.4em; }
     [hidden] { display: none !important; }
+    h2 { font-size: 1.15rem; margin: 0 0 12px; }
+    .row { display: flex; gap: 8px; }
+    .row input { flex: 1; }
+    .row button { width: auto; }
+    table { width: 100%; border-collapse: collapse; margin: 8px 0 12px; }
+    th, td { text-align: left; padding: 8px 4px; border-bottom: 1px solid #0b2c21; }
+    td button { margin: 0; padding: 10px 12px; width: auto; white-space: nowrap; }
+    tfoot th { border: 0; color: var(--accent); }
+    button.secondary { background: transparent; color: var(--fg); border: 1px solid var(--muted); }
   </style>
 </head>
 <body>
@@ -43,6 +52,27 @@
       <label>Link para compartir con tus amigos:</label>
       <p class="link" id="share"></p>
       <button id="copy" type="button">Copiar link</button>
+    </section>
+
+    <section id="no-night" class="card" hidden>
+      <button id="new-night" type="button">Nueva noche</button>
+    </section>
+
+    <section id="night" class="card" hidden>
+      <h2 id="night-title"></h2>
+      <label for="amount">Monto por buy-in / rebuy ($)</label>
+      <input id="amount" type="number" inputmode="decimal" min="0.01" step="0.01" value="100">
+      <form id="add-player" class="row">
+        <input id="player-name" list="known-players" placeholder="Nombre del jugador" required maxlength="30" autocomplete="off">
+        <button>Agregar</button>
+      </form>
+      <datalist id="known-players"></datalist>
+      <table>
+        <thead><tr><th>Jugador</th><th>Rebuys</th><th>Invertido</th><th></th></tr></thead>
+        <tbody id="players"></tbody>
+        <tfoot><tr><th>Pot</th><th></th><th id="pot"></th><th></th></tr></tfoot>
+      </table>
+      <button id="undo" type="button" class="secondary" hidden></button>
     </section>
 
     <p class="error" id="error" role="alert"></p>

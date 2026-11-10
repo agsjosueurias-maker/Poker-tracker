@@ -25,6 +25,11 @@
     th, td { text-align: left; padding: 8px 4px; border-bottom: 1px solid #0b2c21; }
     td button { margin: 0; padding: 10px 12px; width: auto; white-space: nowrap; }
     tfoot th { border: 0; color: var(--accent); }
+    td input { margin: 0; padding: 8px; }
+    .warn { background: var(--bad); color: #fff; padding: 10px; border-radius: 8px; margin: 8px 0; }
+    .ok { color: var(--accent); }
+    .pos { color: #7ee2a8; } .neg { color: var(--bad); }
+    ul.transfers { padding-left: 20px; }
     button.secondary { background: transparent; color: var(--fg); border: 1px solid var(--muted); }
   </style>
 </head>
@@ -73,6 +78,24 @@
         <tfoot><tr><th>Pot</th><th></th><th id="pot"></th><th></th></tr></tfoot>
       </table>
       <button id="undo" type="button" class="secondary" hidden></button>
+
+      <h2>Cierre</h2>
+      <table>
+        <thead><tr><th>Jugador</th><th>Al final ($)</th><th>Ganancia</th></tr></thead>
+        <tbody id="cashouts"></tbody>
+      </table>
+      <div id="result"></div>
+      <button id="close-night" type="button">Cerrar noche</button>
+    </section>
+
+    <section id="last-night" class="card" hidden>
+      <h2 id="last-title"></h2>
+      <table>
+        <thead><tr><th>Jugador</th><th>Ganancia</th></tr></thead>
+        <tbody id="last-net"></tbody>
+      </table>
+      <div id="last-result"></div>
+      <button id="reopen" type="button" class="secondary">Reabrir noche</button>
     </section>
 
     <p class="error" id="error" role="alert"></p>

@@ -1,7 +1,7 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
 import { getDatabase, ref, get, set, push, remove, onValue } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
 import { firebaseConfig } from './config.js';
-import { invested, netByPlayer, mismatch, settle } from './poker.js';
+import { invested, netByPlayer, mismatch, settle, totals } from './poker.js';
 
 const db = getDatabase(initializeApp(firebaseConfig));
 const $ = (id) => document.getElementById(id);
@@ -46,9 +46,12 @@ function render() {
   const known = new Set(Object.values(nights).flatMap((n) => Object.keys(n.players || {})));
   $('known-players').replaceChildren(...[...known].sort().map((p) => Object.assign(document.createElement('option'), { value: p })));
 
-  const last = Object.entries(nights).filter(([, n]) => n.closed).sort((a, b) => b[1].date - a[1].date)[0];
-  $('last-night').hidden = !!open || !last;
-  if (!open) return last && renderLast(last);
+  const closed = Object.entries(nights).filter(([, n]) => n.closed).sort((a, b) => b[1].date - a[1].date);
+  if (!nights[selected]?.closed) selected = open ? null : closed[0]?.[0] ?? null;
+  $('last-night').hidden = !selected;
+  if (selected) renderLast([selected, nights[selected]], !open);
+  renderHistory(closed);
+  if (!open) return;
 
   const night = open[1];
   $('night-title').textContent = 'Noche del ' + dateLabel(night.date);
@@ -118,8 +121,27 @@ function resultNodes(night) {
   return nodes;
 }
 
-function renderLast([id, night]) {
-  $('last-title').textContent = 'Última noche: ' + dateLabel(night.date);
+let selected = null; // closed night shown in the detail card
+
+function renderHistory(closed) {
+  $('history').hidden = !closed.length;
+  $('totals').replaceChildren(...Object.entries(totals(nights)).sort((a, b) => b[1].net - a[1].net).map(([p, t]) =>
+    el('tr', {}, el('td', { textContent: p }), el('td', { textContent: t.nights }), el('td', { textContent: money(t.invested) }),
+      el('td', { textContent: signed(t.net), className: t.net >= 0 ? 'pos' : 'neg' }))));
+  $('night-list').replaceChildren(...closed.map(([id, n]) => {
+    const best = Object.entries(netByPlayer(n.entries, n.cashouts)).sort((a, b) => b[1] - a[1])[0];
+    const pot = Object.values(invested(n.entries)).reduce((a, b) => a + b, 0);
+    const winner = best?.[1] > 0 ? ` · ganó ${best[0]} ${signed(best[1])}` : '';
+    const b = el('button', { type: 'button', textContent: `${dateLabel(n.date)} · pot ${money(pot)}${winner}` });
+    b.setAttribute('aria-current', String(id === selected));
+    b.onclick = () => { selected = id; render(); $('last-night').scrollIntoView({ behavior: 'smooth' }); };
+    return el('li', {}, b);
+  }));
+}
+
+function renderLast([id, night], canReopen) {
+  $('reopen').hidden = !canReopen; // only one open night at a time
+  $('last-title').textContent = 'Noche del ' + dateLabel(night.date);
   const net = netByPlayer(night.entries, night.cashouts);
   $('last-net').replaceChildren(...Object.entries(net).sort((a, b) => b[1] - a[1]).map(([p, v]) =>
     el('tr', {}, el('td', { textContent: p }), el('td', { textContent: signed(v), className: v >= 0 ? 'pos' : 'neg' }))));

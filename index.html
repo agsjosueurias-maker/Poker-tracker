@@ -30,6 +30,9 @@
     .ok { color: var(--accent); }
     .pos { color: #7ee2a8; } .neg { color: var(--bad); }
     ul.transfers { padding-left: 20px; }
+    ul.nights { list-style: none; padding: 0; margin: 0; }
+    ul.nights button { text-align: left; background: #0b2c21; color: var(--fg); font-weight: 400; }
+    ul.nights button[aria-current="true"] { outline: 2px solid var(--accent); }
     button.secondary { background: transparent; color: var(--fg); border: 1px solid var(--muted); }
   </style>
 </head>
@@ -96,6 +99,16 @@
       </table>
       <div id="last-result"></div>
       <button id="reopen" type="button" class="secondary">Reabrir noche</button>
+    </section>
+
+    <section id="history" class="card" hidden>
+      <h2>Acumulado</h2>
+      <table>
+        <thead><tr><th>Jugador</th><th>Noches</th><th>Invertido</th><th>Neto</th></tr></thead>
+        <tbody id="totals"></tbody>
+      </table>
+      <h2>Noches</h2>
+      <ul id="night-list" class="nights"></ul>
     </section>
 
     <p class="error" id="error" role="alert"></p>
